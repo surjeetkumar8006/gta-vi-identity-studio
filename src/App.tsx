@@ -12,6 +12,7 @@ import { LeaderboardModal } from './components/LeaderboardModal';
 import { PublicProfileView } from './components/PublicProfileView';
 import { CharacterProfile } from './types/empire';
 import { DEFAULT_PROFILE } from './utils/presets';
+import { STEP_TO_PATH, PATH_TO_STEP, navigateTo, getCurrentPath } from './utils/router';
 
 export function App() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -22,35 +23,93 @@ export function App() {
   const profileRef = useRef<HTMLDivElement>(null);
   const wantedRef = useRef<HTMLDivElement>(null);
 
-  // Check URL query parameters for ?shareId=xyz
-  useEffect(() => {
+  // Sync state from current window URL path & params
+  const syncStateFromURL = () => {
+    const path = getCurrentPath();
     const params = new URLSearchParams(window.location.search);
     const shareId = params.get('shareId');
+
+    // Check share links (/p/xyz or ?shareId=xyz)
     if (shareId) {
       setActiveShareId(shareId);
+      return;
     }
+    if (path.startsWith('/p/')) {
+      const pId = path.split('/p/')[1];
+      if (pId) {
+        setActiveShareId(pId);
+        return;
+      }
+    }
+    setActiveShareId(null);
+
+    // Check leaderboard path (/leaderboard)
+    if (path === '/leaderboard') {
+      setIsLeaderboardOpen(true);
+      return;
+    } else {
+      setIsLeaderboardOpen(false);
+    }
+
+    // Check step paths (/create, /identity, /reputation, /empire, /profile, /wanted, /export)
+    if (PATH_TO_STEP[path]) {
+      setCurrentStep(PATH_TO_STEP[path]);
+    } else {
+      setCurrentStep(1);
+    }
+  };
+
+  // Initial load and popstate event listener for browser Back/Forward navigation
+  useEffect(() => {
+    syncStateFromURL();
+
+    const handlePopState = () => {
+      syncStateFromURL();
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   const handleUpdateProfile = (updates: Partial<CharacterProfile>) => {
     setProfile(prev => ({ ...prev, ...updates }));
   };
 
-  const handleNext = () => {
-    setCurrentStep(prev => Math.min(7, prev + 1));
+  const handleStepChange = (step: number) => {
+    setCurrentStep(step);
+    const targetPath = STEP_TO_PATH[step] || '/';
+    navigateTo(targetPath);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleNext = () => {
+    const nextStep = Math.min(7, currentStep + 1);
+    handleStepChange(nextStep);
+  };
+
   const handleBack = () => {
-    setCurrentStep(prev => Math.max(1, prev - 1));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const prevStep = Math.max(1, currentStep - 1);
+    handleStepChange(prevStep);
   };
 
   const handleReset = () => {
     setProfile(DEFAULT_PROFILE);
     setCurrentStep(1);
     setActiveShareId(null);
-    window.history.pushState({}, '', window.location.pathname);
+    setIsLeaderboardOpen(false);
+    navigateTo('/');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenLeaderboard = () => {
+    setIsLeaderboardOpen(true);
+    navigateTo('/leaderboard');
+  };
+
+  const handleCloseLeaderboard = () => {
+    setIsLeaderboardOpen(false);
+    const currentPath = STEP_TO_PATH[currentStep] || '/';
+    navigateTo(currentPath);
   };
 
   return (
@@ -60,16 +119,16 @@ export function App() {
         currentStep={currentStep}
         totalSteps={7}
         onReset={handleReset}
-        onOpenLeaderboard={() => setIsLeaderboardOpen(true)}
+        onOpenLeaderboard={handleOpenLeaderboard}
       />
 
-      {/* Public Permalink View if URL has ?shareId=... */}
+      {/* Public Permalink View if URL has ?shareId=... or /p/:id */}
       {activeShareId ? (
         <PublicProfileView
           shareId={activeShareId}
           onClose={() => {
             setActiveShareId(null);
-            window.history.pushState({}, '', window.location.pathname);
+            navigateTo('/');
           }}
         />
       ) : (
@@ -78,10 +137,7 @@ export function App() {
           <ProgressBar
             currentStep={currentStep}
             totalSteps={7}
-            onSelectStep={(step) => {
-              setCurrentStep(step);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+            onSelectStep={handleStepChange}
           />
 
           {/* Step Components Container */}
@@ -166,17 +222,17 @@ export function App() {
       {/* VCPD Most Wanted Leaderboard Modal */}
       <LeaderboardModal
         isOpen={isLeaderboardOpen}
-        onClose={() => setIsLeaderboardOpen(false)}
+        onClose={handleCloseLeaderboard}
         onSelectProfile={(shareId) => {
           setActiveShareId(shareId);
-          window.history.pushState({}, '', `?shareId=${shareId}`);
+          navigateTo(`/p/${shareId}`);
         }}
       />
 
       {/* Footer */}
       <footer className="w-full bg-[#05030b] border-t border-white/10 py-6 px-4 text-center text-xs text-slate-500 space-y-1">
         <p>
-          VICE CITY: BUILD YOUR CRIMINAL EMPIRE • Powered by Express REST Backend & SQLite
+          VICE CITY: BUILD YOUR CRIMINAL EMPIRE • Powered by Express REST Backend & Dynamic Router
         </p>
         <p className="text-[10px] text-slate-600">
           Powered by <strong className="text-slate-400">@unlayer/react-image-editor</strong> • Community Project
