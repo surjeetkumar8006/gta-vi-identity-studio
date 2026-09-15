@@ -51,7 +51,6 @@ export const Step4ReputationSystem: React.FC<Step4ReputationSystemProps> = ({
       updated = [...current, scenarioId];
     }
 
-    // Re-calculate stats from base (50, 50, 50, 50)
     const baseStats: ReputationStats = { streetRep: 50, money: 50, influence: 50, risk: 40 };
     updated.forEach(sId => {
       const scenario = SCENARIOS.find(s => s.id === sId);
@@ -75,28 +74,28 @@ export const Step4ReputationSystem: React.FC<Step4ReputationSystemProps> = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
+    <div className="max-w-4xl mx-auto px-4 py-6 sm:py-8 space-y-6 sm:space-y-8">
       
       {/* Header */}
       <div className="text-center space-y-2">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-vice-pink/10 border border-vice-pink/30 text-vice-pink text-xs font-bold uppercase tracking-widest">
           <Award className="w-3.5 h-3.5" /> Step 4: Reputation & Dynamic Stats
         </div>
-        <h2 className="text-3xl sm:text-4xl font-black font-orbitron text-white">
+        <h2 className="text-2xl sm:text-4xl font-black font-orbitron text-white">
           YOUR <span className="text-neon-pink">CRIMINAL REPUTATION</span>
         </h2>
-        <p className="text-sm text-slate-400 max-w-xl mx-auto">
+        <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">
           Every decision shapes your empire. Select operations to boost your stats and dynamic profile card.
         </p>
       </div>
 
       {/* Main Stats Display */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         
         {/* Live Stat Meters */}
-        <div className="vice-glass p-6 rounded-3xl border border-vice-pink/30 space-y-5">
+        <div className="vice-glass p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-vice-pink/30 space-y-4 sm:space-y-5">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold font-orbitron text-white">Empire Dynamic Stats</h3>
+            <h3 className="text-xs sm:text-sm font-bold font-orbitron text-white">Empire Dynamic Stats</h3>
             <button
               onClick={resetStats}
               className="text-[10px] text-slate-400 hover:text-white flex items-center gap-1 bg-white/5 px-2 py-1 rounded-lg"
@@ -106,64 +105,64 @@ export const Step4ReputationSystem: React.FC<Step4ReputationSystemProps> = ({
           </div>
 
           {/* Street Rep */}
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <div className="flex items-center justify-between text-xs font-bold">
-              <span className="text-vice-pink flex items-center gap-1.5">
-                <Award className="w-4 h-4" /> Street Reputation
+              <span className="text-vice-pink flex items-center gap-1">
+                <Award className="w-3.5 h-3.5" /> Street Rep
               </span>
               <span className="text-white font-mono">{profile.stats.streetRep} / 100</span>
             </div>
-            <div className="h-3 w-full bg-[#090714] rounded-full overflow-hidden p-0.5 border border-white/10">
+            <div className="h-2.5 sm:h-3 w-full bg-[#090714] rounded-full overflow-hidden p-0.5 border border-white/10">
               <div
-                className="h-full bg-gradient-to-r from-vice-pink to-purple-500 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(255,0,127,0.7)]"
+                className="h-full bg-gradient-to-r from-vice-pink to-purple-500 rounded-full transition-all duration-500"
                 style={{ width: `${profile.stats.streetRep}%` }}
               />
             </div>
           </div>
 
           {/* Money */}
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <div className="flex items-center justify-between text-xs font-bold">
-              <span className="text-emerald-400 flex items-center gap-1.5">
-                <DollarSign className="w-4 h-4" /> Money & Cash Flow
+              <span className="text-emerald-400 flex items-center gap-1">
+                <DollarSign className="w-3.5 h-3.5" /> Cash Flow
               </span>
               <span className="text-white font-mono">{profile.stats.money} / 100</span>
             </div>
-            <div className="h-3 w-full bg-[#090714] rounded-full overflow-hidden p-0.5 border border-white/10">
+            <div className="h-2.5 sm:h-3 w-full bg-[#090714] rounded-full overflow-hidden p-0.5 border border-white/10">
               <div
-                className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(52,211,153,0.7)]"
+                className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full transition-all duration-500"
                 style={{ width: `${profile.stats.money}%` }}
               />
             </div>
           </div>
 
           {/* Influence */}
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <div className="flex items-center justify-between text-xs font-bold">
-              <span className="text-vice-cyan flex items-center gap-1.5">
-                <TrendingUp className="w-4 h-4" /> Syndicate Influence
+              <span className="text-vice-cyan flex items-center gap-1">
+                <TrendingUp className="w-3.5 h-3.5" /> Influence
               </span>
               <span className="text-white font-mono">{profile.stats.influence} / 100</span>
             </div>
-            <div className="h-3 w-full bg-[#090714] rounded-full overflow-hidden p-0.5 border border-white/10">
+            <div className="h-2.5 sm:h-3 w-full bg-[#090714] rounded-full overflow-hidden p-0.5 border border-white/10">
               <div
-                className="h-full bg-gradient-to-r from-vice-cyan to-blue-500 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(0,240,255,0.7)]"
+                className="h-full bg-gradient-to-r from-vice-cyan to-blue-500 rounded-full transition-all duration-500"
                 style={{ width: `${profile.stats.influence}%` }}
               />
             </div>
           </div>
 
           {/* Risk */}
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <div className="flex items-center justify-between text-xs font-bold">
-              <span className="text-vice-orange flex items-center gap-1.5">
-                <AlertTriangle className="w-4 h-4" /> VCPD Risk Level
+              <span className="text-vice-orange flex items-center gap-1">
+                <AlertTriangle className="w-3.5 h-3.5" /> Risk Level
               </span>
               <span className="text-white font-mono">{profile.stats.risk} / 100</span>
             </div>
-            <div className="h-3 w-full bg-[#090714] rounded-full overflow-hidden p-0.5 border border-white/10">
+            <div className="h-2.5 sm:h-3 w-full bg-[#090714] rounded-full overflow-hidden p-0.5 border border-white/10">
               <div
-                className="h-full bg-gradient-to-r from-vice-orange to-red-600 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(255,138,0,0.7)]"
+                className="h-full bg-gradient-to-r from-vice-orange to-red-600 rounded-full transition-all duration-500"
                 style={{ width: `${profile.stats.risk}%` }}
               />
             </div>
@@ -172,9 +171,9 @@ export const Step4ReputationSystem: React.FC<Step4ReputationSystemProps> = ({
         </div>
 
         {/* Dynamic Scenario Operations */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <h3 className="text-xs font-bold font-orbitron text-white uppercase tracking-wider">
-            Choose Your Syndicate Operations:
+            Choose Your Operations:
           </h3>
 
           {SCENARIOS.map((sc) => {
@@ -183,20 +182,20 @@ export const Step4ReputationSystem: React.FC<Step4ReputationSystemProps> = ({
               <button
                 key={sc.id}
                 onClick={() => toggleScenario(sc.id)}
-                className={`w-full p-4 rounded-2xl border text-left transition-all ${
+                className={`w-full p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border text-left transition-all ${
                   isSelected
-                    ? 'bg-vice-pink/20 border-vice-pink text-white shadow-[0_0_15px_rgba(255,0,127,0.4)] scale-[1.02]'
+                    ? 'bg-vice-pink/20 border-vice-pink text-white font-bold'
                     : 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10'
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <h4 className="font-bold text-white text-sm">{sc.title}</h4>
-                  <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${isSelected ? 'bg-vice-pink text-white' : 'bg-white/10 text-slate-400'}`}>
+                  <h4 className="font-bold text-white text-xs sm:text-sm">{sc.title}</h4>
+                  <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${isSelected ? 'bg-vice-pink text-white' : 'bg-white/10 text-slate-400'}`}>
                     {isSelected ? 'ACTIVE' : '+ SELECT'}
                   </span>
                 </div>
-                <p className="text-xs text-slate-400 mt-1">{sc.desc}</p>
-                <div className="text-[10px] font-mono text-vice-cyan mt-2">{sc.effectText}</div>
+                <p className="text-[11px] sm:text-xs text-slate-400 mt-1">{sc.desc}</p>
+                <div className="text-[10px] font-mono text-vice-cyan mt-1.5">{sc.effectText}</div>
               </button>
             );
           })}
@@ -205,13 +204,13 @@ export const Step4ReputationSystem: React.FC<Step4ReputationSystemProps> = ({
       </div>
 
       {/* Nav Buttons */}
-      <div className="flex items-center justify-between pt-6 border-t border-white/10">
+      <div className="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 pt-4 sm:pt-6 border-t border-white/10">
         <button
           onClick={() => {
             soundFx.playClick();
             onBack();
           }}
-          className="px-6 py-3 rounded-xl bg-white/5 hover:bg-white/15 text-slate-300 font-bold text-xs flex items-center gap-2 transition-all"
+          className="w-full sm:w-auto px-6 py-3 rounded-xl bg-white/5 hover:bg-white/15 text-slate-300 font-bold text-xs flex items-center justify-center gap-2 transition-all"
         >
           <ArrowLeft className="w-4 h-4" /> Back to Identity
         </button>
@@ -221,7 +220,7 @@ export const Step4ReputationSystem: React.FC<Step4ReputationSystemProps> = ({
             soundFx.playClick();
             onNext();
           }}
-          className="px-8 py-3 rounded-xl bg-gradient-to-r from-vice-pink to-vice-cyan text-white font-black font-orbitron text-xs tracking-wider shadow-[0_0_20px_rgba(255,0,127,0.5)] hover:scale-105 transition-all flex items-center gap-2"
+          className="w-full sm:w-auto px-8 py-3 rounded-xl bg-gradient-to-r from-vice-pink to-vice-cyan text-white font-black font-orbitron text-xs tracking-wider transition-all flex items-center justify-center gap-2 border border-white/20 shadow-md"
         >
           <span>BUILD YOUR EMPIRE</span>
           <ArrowRight className="w-4 h-4" />
