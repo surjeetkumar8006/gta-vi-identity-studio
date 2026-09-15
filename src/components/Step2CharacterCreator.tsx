@@ -71,7 +71,7 @@ export const Step2CharacterCreator: React.FC<Step2CharacterCreatorProps> = ({
         <div className="lg:col-span-6 flex flex-col items-center space-y-4">
           
           {/* Card Frame with Filter applied */}
-          <div className="relative w-full max-w-sm aspect-square rounded-3xl p-3 bg-gradient-to-b from-vice-pink/40 to-vice-cyan/40 shadow-[0_0_40px_rgba(255,0,127,0.3)]">
+          <div className="relative w-full max-w-sm aspect-square rounded-3xl p-3 bg-gradient-to-b from-vice-pink/30 to-vice-cyan/30 border border-white/10 shadow-lg">
             <div className="relative w-full h-full rounded-2xl bg-[#090714] overflow-hidden flex items-center justify-center border border-white/10">
               
               <img
@@ -82,7 +82,7 @@ export const Step2CharacterCreator: React.FC<Step2CharacterCreatorProps> = ({
               />
 
               {/* Badge overlay */}
-              <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-black/70 backdrop-blur-md border border-vice-pink/50 text-vice-pink font-bold text-[10px] tracking-widest uppercase">
+              <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-black/80 border border-vice-pink/50 text-vice-pink font-bold text-[10px] tracking-widest uppercase">
                 {currentStylePreset.badge}
               </div>
 
@@ -100,7 +100,7 @@ export const Step2CharacterCreator: React.FC<Step2CharacterCreatorProps> = ({
               soundFx.playClick();
               setIsEditorOpen(true);
             }}
-            className="w-full max-w-sm py-3.5 px-6 rounded-2xl bg-gradient-to-r from-vice-pink via-purple-600 to-vice-cyan text-white font-bold font-orbitron text-sm tracking-wide shadow-[0_0_25px_rgba(255,0,127,0.5)] hover:shadow-[0_0_40px_rgba(0,240,255,0.7)] hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
+            className="w-full max-w-sm py-3.5 px-6 rounded-2xl bg-gradient-to-r from-vice-pink via-purple-600 to-vice-cyan text-white font-bold font-orbitron text-sm tracking-wide shadow-md hover:scale-[1.02] transition-all flex items-center justify-center gap-2 border border-white/20"
           >
             <Sparkles className="w-5 h-5 text-vice-cyan animate-spin" />
             <span>LAUNCH REACT IMAGE EDITOR</span>
@@ -140,7 +140,7 @@ export const Step2CharacterCreator: React.FC<Step2CharacterCreatorProps> = ({
                     onClick={() => handleSelectPresetAvatar(cp.avatar)}
                     className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all ${
                       isSelected
-                        ? 'border-vice-cyan ring-4 ring-vice-cyan/30 scale-105'
+                        ? 'border-vice-cyan ring-2 ring-vice-cyan/40 scale-105'
                         : 'border-white/10 hover:border-white/40 opacity-70 hover:opacity-100'
                     }`}
                   >
@@ -167,7 +167,7 @@ export const Step2CharacterCreator: React.FC<Step2CharacterCreatorProps> = ({
                     onClick={() => handleSelectStylePreset(sp.id)}
                     className={`p-3 rounded-xl border text-left transition-all flex items-center justify-between ${
                       isSelected
-                        ? 'bg-vice-pink/20 border-vice-pink text-white shadow-[0_0_15px_rgba(255,0,127,0.3)]'
+                        ? 'bg-vice-pink/20 border-vice-pink text-white font-bold'
                         : 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10'
                     }`}
                   >
@@ -203,7 +203,7 @@ export const Step2CharacterCreator: React.FC<Step2CharacterCreatorProps> = ({
             soundFx.playClick();
             onNext();
           }}
-          className="px-8 py-3 rounded-xl bg-gradient-to-r from-vice-pink to-vice-cyan text-white font-black font-orbitron text-xs tracking-wider shadow-[0_0_20px_rgba(255,0,127,0.5)] hover:scale-105 transition-all flex items-center gap-2"
+          className="px-8 py-3 rounded-xl bg-gradient-to-r from-vice-pink to-vice-cyan text-white font-black font-orbitron text-xs tracking-wider hover:scale-105 transition-all flex items-center gap-2 border border-white/20 shadow-md"
         >
           <span>BUILD YOUR IDENTITY</span>
           <ArrowRight className="w-4 h-4" />

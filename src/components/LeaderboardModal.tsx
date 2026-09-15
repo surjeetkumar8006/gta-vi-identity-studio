@@ -48,7 +48,7 @@ export const LeaderboardModal: React.FC<LeaderboardModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 overflow-y-auto">
-      <div className="relative w-full max-w-4xl bg-[#0c0919] border-2 border-vice-orange rounded-3xl shadow-[0_0_50px_rgba(255,138,0,0.35)] overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="relative w-full max-w-4xl bg-[#0c0919] border border-vice-orange/60 rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 bg-[#140f2a] border-b border-vice-orange/40">

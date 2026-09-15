@@ -88,7 +88,7 @@ export const Step6ProfileCards: React.FC<Step6ProfileCardsProps> = ({
           <div className="w-full flex flex-col items-center gap-4">
             <div
               ref={profileRef}
-              className="relative w-full max-w-md bg-gradient-to-b from-[#140f2a] via-[#090714] to-[#12071f] border-2 border-vice-pink rounded-3xl p-6 shadow-[0_0_50px_rgba(255,0,127,0.4)] overflow-hidden font-sans space-y-5"
+              className="relative w-full max-w-md bg-gradient-to-b from-[#140f2a] via-[#090714] to-[#12071f] border border-vice-pink/60 rounded-3xl p-6 shadow-xl overflow-hidden font-sans space-y-5"
             >
               {/* Card Watermark */}
               <div className="absolute top-0 right-0 p-6 opacity-10 pointer-events-none text-vice-pink">
@@ -229,7 +229,7 @@ export const Step6ProfileCards: React.FC<Step6ProfileCardsProps> = ({
 
             <div
               ref={wantedRef}
-              className="relative w-full max-w-md bg-[#161009] border-4 border-amber-600 rounded-3xl p-6 shadow-[0_0_50px_rgba(255,138,0,0.5)] overflow-hidden font-sans space-y-4 text-center"
+              className="relative w-full max-w-md bg-[#161009] border-2 border-amber-600 rounded-3xl p-6 shadow-xl overflow-hidden font-sans space-y-4 text-center"
             >
               {/* Header */}
               <div className="bg-amber-600 text-black py-2 rounded-xl font-orbitron font-black text-3xl tracking-widest shadow-inner">

@@ -99,10 +99,10 @@ export const Step7ShareExport: React.FC<Step7ShareExportProps> = ({
       </div>
 
       {/* Main Actions Box */}
-      <div className="vice-glass p-8 rounded-3xl border border-vice-pink/40 space-y-8 shadow-[0_0_50px_rgba(255,0,127,0.3)]">
+      <div className="vice-glass p-8 rounded-3xl border border-vice-pink/30 space-y-8 shadow-xl">
         
         {/* Backend Publish Section */}
-        <div className="bg-gradient-to-r from-vice-pink/20 via-purple-900/30 to-vice-cyan/20 p-6 rounded-2xl border border-vice-pink/40 space-y-3">
+        <div className="bg-gradient-to-r from-vice-pink/15 via-purple-900/20 to-vice-cyan/15 p-6 rounded-2xl border border-vice-pink/30 space-y-3">
           <h3 className="text-sm font-bold font-orbitron text-white flex items-center justify-center gap-2">
             <Globe className="w-4 h-4 text-vice-cyan" /> PUBLISH TO VICE CITY NETWORK & LEADERBOARD
           </h3>
@@ -127,7 +127,7 @@ export const Step7ShareExport: React.FC<Step7ShareExportProps> = ({
               <button
                 onClick={handlePublishBackend}
                 disabled={publishing}
-                className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-vice-cyan via-blue-600 to-vice-pink text-white font-black font-orbitron text-xs tracking-wider shadow-[0_0_20px_rgba(0,240,255,0.6)] hover:scale-105 transition-all flex items-center gap-2 mx-auto"
+                className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-vice-cyan via-blue-600 to-vice-pink text-white font-black font-orbitron text-xs tracking-wider shadow-md hover:scale-105 transition-all flex items-center gap-2 mx-auto border border-white/20"
               >
                 <UploadCloud className="w-4 h-4 animate-bounce" />
                 <span>{publishing ? 'Publishing to Database...' : 'PUBLISH EMPIRE TO BACKEND'}</span>
@@ -145,7 +145,7 @@ export const Step7ShareExport: React.FC<Step7ShareExportProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button
               onClick={() => downloadCard('profile', 'png')}
-              className="py-4 px-6 rounded-2xl bg-gradient-to-r from-vice-pink to-purple-600 text-white font-bold font-orbitron text-sm shadow-[0_0_20px_rgba(255,0,127,0.5)] hover:scale-105 transition-all flex items-center justify-center gap-2"
+              className="py-4 px-6 rounded-2xl bg-gradient-to-r from-vice-pink to-purple-600 text-white font-bold font-orbitron text-sm shadow-md hover:scale-105 transition-all flex items-center justify-center gap-2 border border-white/20"
             >
               <Download className="w-5 h-5" />
               <span>DOWNLOAD PROFILE CARD (PNG)</span>
@@ -153,7 +153,7 @@ export const Step7ShareExport: React.FC<Step7ShareExportProps> = ({
 
             <button
               onClick={() => downloadCard('wanted', 'png')}
-              className="py-4 px-6 rounded-2xl bg-gradient-to-r from-vice-orange to-yellow-600 text-white font-bold font-orbitron text-sm shadow-[0_0_20px_rgba(255,138,0,0.5)] hover:scale-105 transition-all flex items-center justify-center gap-2"
+              className="py-4 px-6 rounded-2xl bg-gradient-to-r from-vice-orange to-yellow-600 text-white font-bold font-orbitron text-sm shadow-md hover:scale-105 transition-all flex items-center justify-center gap-2 border border-white/20"
             >
               <Download className="w-5 h-5" />
               <span>DOWNLOAD WANTED POSTER (PNG)</span>
@@ -173,7 +173,7 @@ export const Step7ShareExport: React.FC<Step7ShareExportProps> = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => soundFx.playClick()}
-              className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#1DA1F2] hover:bg-[#1a91da] text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-lg"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-[#1DA1F2] hover:bg-[#1a91da] text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md"
             >
               <TwitterIcon className="w-4 h-4" />
               <span>Tweet #BuiltWithImageEditor</span>

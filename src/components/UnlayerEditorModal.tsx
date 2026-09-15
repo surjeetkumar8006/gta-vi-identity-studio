@@ -54,23 +54,23 @@ export const UnlayerEditorModal: React.FC<UnlayerEditorModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4 md:p-6 overflow-y-auto">
-      <div className="relative w-full max-w-5xl bg-[#0e0b1c] border-2 border-vice-pink rounded-2xl shadow-[0_0_50px_rgba(255,0,127,0.35)] overflow-hidden flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md p-2 sm:p-4 overflow-y-auto">
+      <div className="relative w-full max-w-5xl bg-[#0e0b1c] border border-vice-pink/60 rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[96vh]">
         
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 bg-[#140f2a] border-b border-vice-pink/40">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-vice-pink/20 text-vice-pink border border-vice-pink/50">
-              <Sparkles className="w-5 h-5 animate-pulse" />
+        <div className="flex items-center justify-between px-3 sm:px-6 py-3 sm:py-4 bg-[#140f2a] border-b border-vice-pink/40">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="p-1.5 sm:p-2 rounded-xl bg-vice-pink/20 text-vice-pink border border-vice-pink/50">
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 animate-pulse" />
             </div>
             <div>
-              <h2 className="text-xl font-bold font-orbitron text-white tracking-wide flex items-center gap-2">
+              <h2 className="text-sm sm:text-xl font-bold font-orbitron text-white tracking-wide flex items-center gap-1.5 sm:gap-2">
                 {title}
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-vice-cyan/20 text-vice-cyan border border-vice-cyan/40 font-sans">
+                <span className="hidden sm:inline-block text-[10px] px-2 py-0.5 rounded-full bg-vice-cyan/20 text-vice-cyan border border-vice-cyan/40 font-sans">
                   @unlayer/react-image-editor
                 </span>
               </h2>
-              <p className="text-xs text-slate-400">Crop, resize, filters, stickers, text overlays, frames & draw tools</p>
+              <p className="text-[10px] sm:text-xs text-slate-400 hidden sm:block">Crop, resize, filters, stickers, text overlays & frames</p>
             </div>
           </div>
 
@@ -79,16 +79,16 @@ export const UnlayerEditorModal: React.FC<UnlayerEditorModalProps> = ({
               soundFx.playClick();
               onClose();
             }}
-            className="p-2 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-all"
+            className="p-1.5 text-slate-400 hover:text-white hover:bg-white/10 rounded-xl transition-all"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
 
         {/* Style Presets Selector Ribbon */}
-        <div className="px-6 py-3 bg-[#0a0717] border-b border-white/10 flex items-center gap-2 overflow-x-auto">
-          <span className="text-xs font-bold text-vice-pink uppercase tracking-widest whitespace-nowrap flex items-center gap-1">
-            <Sparkles className="w-3.5 h-3.5" /> Style Presets:
+        <div className="px-3 sm:px-6 py-2 sm:py-3 bg-[#0a0717] border-b border-white/10 flex items-center gap-2 overflow-x-auto">
+          <span className="text-[10px] sm:text-xs font-bold text-vice-pink uppercase tracking-widest whitespace-nowrap flex items-center gap-1">
+            <Sparkles className="w-3 h-3" /> Presets:
           </span>
           {STYLE_PRESETS.map((p) => {
             const isSelected = p.id === selectedPreset;
@@ -96,9 +96,9 @@ export const UnlayerEditorModal: React.FC<UnlayerEditorModalProps> = ({
               <button
                 key={p.id}
                 onClick={() => handleSelectPreset(p.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1 ${
                   isSelected
-                    ? 'bg-vice-pink text-white shadow-[0_0_15px_rgba(255,0,127,0.6)] scale-105'
+                    ? 'bg-vice-pink text-white scale-105'
                     : 'bg-white/5 text-slate-300 hover:bg-white/15'
                 }`}
               >
@@ -110,13 +110,11 @@ export const UnlayerEditorModal: React.FC<UnlayerEditorModalProps> = ({
         </div>
 
         {/* Main Editor Body */}
-        <div className="relative flex-1 bg-[#06040d] min-h-[500px] flex items-center justify-center p-2 overflow-hidden">
+        <div className="relative flex-1 bg-[#06040d] min-h-[380px] sm:min-h-[500px] flex items-center justify-center p-1 sm:p-2 overflow-hidden">
           {loadError ? (
-            <div className="flex flex-col items-center justify-center p-8 text-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center">
-                <RefreshCw className="w-8 h-8 animate-spin" />
-              </div>
-              <p className="text-slate-300">Editor initializing...</p>
+            <div className="flex flex-col items-center justify-center p-6 text-center gap-3">
+              <RefreshCw className="w-8 h-8 animate-spin text-vice-pink" />
+              <p className="text-slate-300 text-xs">Editor initializing...</p>
               <button
                 onClick={() => setLoadError(false)}
                 className="px-4 py-2 bg-vice-pink text-white text-xs font-bold rounded-lg"
@@ -126,7 +124,7 @@ export const UnlayerEditorModal: React.FC<UnlayerEditorModalProps> = ({
             </div>
           ) : (
             <div 
-              className="w-full h-full min-h-[500px] rounded-lg overflow-hidden transition-all"
+              className="w-full h-full min-h-[380px] sm:min-h-[500px] rounded-lg overflow-hidden transition-all"
               style={{ filter: currentPreset.filterEffect }}
             >
               <ImageEditor
@@ -152,44 +150,43 @@ export const UnlayerEditorModal: React.FC<UnlayerEditorModalProps> = ({
                 }}
                 onSave={handleSave}
                 onCancel={onClose}
-                minHeight="500px"
+                minHeight="380px"
               />
             </div>
           )}
         </div>
 
         {/* Footer info bar */}
-        <div className="px-6 py-3 bg-[#110c24] border-t border-white/10 flex items-center justify-between">
+        <div className="px-3 sm:px-6 py-2.5 sm:py-3 bg-[#110c24] border-t border-white/10 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-            <span className="text-xs text-slate-300">
-              Active Style: <strong style={{ color: currentPreset.accentColor }}>{currentPreset.name}</strong>
+            <span className="text-[10px] sm:text-xs text-slate-300 truncate max-w-[150px] sm:max-w-none">
+              Active: <strong style={{ color: currentPreset.accentColor }}>{currentPreset.name}</strong>
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <button
               onClick={() => {
                 soundFx.playClick();
                 onClose();
               }}
-              className="px-4 py-2 text-xs font-bold text-slate-300 hover:text-white bg-white/5 hover:bg-white/15 rounded-xl transition-all"
+              className="px-3 py-1.5 sm:px-4 sm:py-2 text-[11px] sm:text-xs font-bold text-slate-300 hover:text-white bg-white/5 hover:bg-white/15 rounded-xl transition-all"
             >
               Cancel
             </button>
             <button
               onClick={() => {
                 soundFx.playClick();
-                // If user clicks apply directly from modal controls
                 if (imageUrl) {
                   handleSave({ dataUrl: imageUrl });
                 }
               }}
               disabled={isSaving}
-              className="px-6 py-2 bg-gradient-to-r from-vice-pink to-vice-orange hover:from-vice-pinkGlow hover:to-vice-orange text-white font-bold text-xs rounded-xl shadow-[0_0_20px_rgba(255,0,127,0.5)] transition-all flex items-center gap-2"
+              className="px-4 py-1.5 sm:px-6 sm:py-2 bg-gradient-to-r from-vice-pink to-vice-orange hover:from-vice-pinkGlow hover:to-vice-orange text-white font-bold text-[11px] sm:text-xs rounded-xl shadow-md transition-all flex items-center gap-1.5"
             >
-              {isSaving ? 'Processing...' : 'Apply Image & Save'}
-              <Sparkles className="w-4 h-4" />
+              {isSaving ? 'Saving...' : 'Apply Image & Save'}
+              <Sparkles className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
