@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Volume2, VolumeX, Sparkles, Flame, RotateCcw } from 'lucide-react';
+import { Volume2, VolumeX, Sparkles, Flame, RotateCcw, Trophy } from 'lucide-react';
 import { GithubIcon } from './SocialIcons';
 import { soundFx } from '../utils/soundEffects';
 
@@ -7,9 +7,10 @@ interface NavbarProps {
   currentStep: number;
   totalSteps: number;
   onReset: () => void;
+  onOpenLeaderboard?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ currentStep, onReset }) => {
+export const Navbar: React.FC<NavbarProps> = ({ currentStep, onReset, onOpenLeaderboard }) => {
   const [isMuted, setIsMuted] = useState(soundFx.getMuted());
 
   const toggleSound = () => {
@@ -39,15 +40,30 @@ export const Navbar: React.FC<NavbarProps> = ({ currentStep, onReset }) => {
               </span>
             </div>
             <p className="text-[10px] text-slate-400 font-mono hidden md:block">
-              Powered by <span className="text-vice-cyan">React Image Editor</span>
+              Powered by <span className="text-vice-cyan">React Image Editor</span> & Express REST Backend
             </p>
           </div>
         </div>
 
-        {/* Center Hashtag Badge */}
-        <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full bg-vice-cyan/10 border border-vice-cyan/30 text-vice-cyan text-xs font-semibold">
-          <Sparkles className="w-3.5 h-3.5 animate-spin" />
-          <span>#BuiltWithImageEditor Challenge</span>
+        {/* Center Leaderboard Button */}
+        <div className="flex items-center gap-3">
+          {onOpenLeaderboard && (
+            <button
+              onClick={() => {
+                soundFx.playStarGain();
+                onOpenLeaderboard();
+              }}
+              className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-vice-orange to-yellow-600 hover:from-yellow-500 hover:to-vice-orange text-black font-black font-orbitron text-xs shadow-[0_0_15px_rgba(255,138,0,0.5)] transition-all flex items-center gap-1.5"
+            >
+              <Trophy className="w-3.5 h-3.5" />
+              <span>VCPD LEADERBOARD</span>
+            </button>
+          )}
+
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full bg-vice-cyan/10 border border-vice-cyan/30 text-vice-cyan text-xs font-semibold">
+            <Sparkles className="w-3.5 h-3.5 animate-spin" />
+            <span>#BuiltWithImageEditor</span>
+          </div>
         </div>
 
         {/* Actions */}

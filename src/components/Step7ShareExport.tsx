@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
-import { Download, Share2, Copy, RotateCcw, Check, Sparkles, ExternalLink } from 'lucide-react';
+import { Download, Share2, Copy, RotateCcw, Check, Sparkles, ExternalLink, Globe, UploadCloud } from 'lucide-react';
 import { GithubIcon, TwitterIcon } from './SocialIcons';
 import { toPng, toJpeg } from 'html-to-image';
 import { CharacterProfile } from '../types/empire';
+import { apiService } from '../services/api';
 import { soundFx } from '../utils/soundEffects';
 
 interface Step7ShareExportProps {
@@ -19,7 +20,9 @@ export const Step7ShareExport: React.FC<Step7ShareExportProps> = ({
   profileRef,
   wantedRef,
 }) => {
-  const [copied, setCopied] = React.useState(false);
+  const [copied, setCopied] = useState(false);
+  const [publishing, setPublishing] = useState(false);
+  const [publishedShareId, setPublishedShareId] = useState<string | null>(null);
 
   useEffect(() => {
     soundFx.playSuccess();
@@ -52,7 +55,23 @@ export const Step7ShareExport: React.FC<Step7ShareExportProps> = ({
     }
   };
 
-  const shareText = `Check out my Vice City Criminal Empire profile! Built with @unlayerhq React Image Editor 🎮 #BuiltWithImageEditor\nhttps://github.com/surjeetkumar8006/gta-vi-identity-studio`;
+  const handlePublishBackend = async () => {
+    soundFx.playClick();
+    setPublishing(true);
+    const res = await apiService.publishProfile(profile);
+    setPublishing(false);
+
+    if (res.success && res.shareId) {
+      soundFx.playSuccess();
+      setPublishedShareId(res.shareId);
+    }
+  };
+
+  const shareUrl = publishedShareId 
+    ? `${window.location.origin}/?shareId=${publishedShareId}`
+    : `https://github.com/surjeetkumar8006/gta-vi-identity-studio`;
+
+  const shareText = `Check out my Vice City Criminal Empire profile! Built with @unlayerhq React Image Editor 🎮 #BuiltWithImageEditor\n${shareUrl}`;
 
   const copyToClipboard = () => {
     soundFx.playClick();
@@ -75,13 +94,48 @@ export const Step7ShareExport: React.FC<Step7ShareExportProps> = ({
           YOUR VICE CITY <span className="text-neon-pink">EMPIRE IS READY</span>
         </h2>
         <p className="text-sm text-slate-400 max-w-xl mx-auto">
-          Download high-definition PNG/JPEG assets or share your build with the <strong className="text-vice-cyan">#BuiltWithImageEditor</strong> community.
+          Download high-definition assets or publish your empire to the <strong className="text-vice-cyan">Vice City Backend Database</strong> & Leaderboard.
         </p>
       </div>
 
       {/* Main Actions Box */}
       <div className="vice-glass p-8 rounded-3xl border border-vice-pink/40 space-y-8 shadow-[0_0_50px_rgba(255,0,127,0.3)]">
         
+        {/* Backend Publish Section */}
+        <div className="bg-gradient-to-r from-vice-pink/20 via-purple-900/30 to-vice-cyan/20 p-6 rounded-2xl border border-vice-pink/40 space-y-3">
+          <h3 className="text-sm font-bold font-orbitron text-white flex items-center justify-center gap-2">
+            <Globe className="w-4 h-4 text-vice-cyan" /> PUBLISH TO VICE CITY NETWORK & LEADERBOARD
+          </h3>
+          <p className="text-xs text-slate-300 max-w-md mx-auto">
+            Saves your profile card & wanted poster to the Express REST API backend database, allowing anyone to view, share & upvote your empire.
+          </p>
+
+          <div className="pt-2">
+            {publishedShareId ? (
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 text-xs font-mono">
+                <span className="px-3 py-2 rounded-xl bg-emerald-500/20 text-emerald-400 font-bold border border-emerald-500/40 flex items-center gap-1.5">
+                  <Check className="w-4 h-4" /> Published! Share ID: {publishedShareId}
+                </span>
+                <button
+                  onClick={copyToClipboard}
+                  className="px-4 py-2 rounded-xl bg-vice-cyan text-black font-bold flex items-center gap-1 hover:bg-white"
+                >
+                  <Copy className="w-3.5 h-3.5" /> Copy Permalink
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={handlePublishBackend}
+                disabled={publishing}
+                className="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-vice-cyan via-blue-600 to-vice-pink text-white font-black font-orbitron text-xs tracking-wider shadow-[0_0_20px_rgba(0,240,255,0.6)] hover:scale-105 transition-all flex items-center gap-2 mx-auto"
+              >
+                <UploadCloud className="w-4 h-4 animate-bounce" />
+                <span>{publishing ? 'Publishing to Database...' : 'PUBLISH EMPIRE TO BACKEND'}</span>
+              </button>
+            )}
+          </div>
+        </div>
+
         {/* Download Buttons */}
         <div className="space-y-4">
           <h3 className="text-xs font-bold font-orbitron text-slate-300 uppercase tracking-widest">

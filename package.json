@@ -1,28 +1,35 @@
 {
   "name": "gta-vi-identity-studio",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "server": "npm --prefix server run dev",
+    "dev:all": "concurrently \"npm run dev\" \"npm run server\"",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
-    "autoprefixer": "^10.6.0",
-    "postcss": "^8.5.28",
-    "tailwindcss": "^3.4.19",
-    "typescript": "~6.0.2",
+    "@types/canvas-confetti": "*",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.2",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.7.3",
     "vite": "^8.3.0"
   },
   "dependencies": {
-    "@types/canvas-confetti": "^1.9.0",
-    "@unlayer/react-image-editor": "^1.0.2",
+    "@unlayer/react-image-editor": "*",
     "canvas-confetti": "^1.9.4",
-    "framer-motion": "^13.3.0",
+    "clsx": "^2.1.1",
+    "framer-motion": "^12.4.2",
     "html-to-image": "^1.11.13",
-    "lucide-react": "^1.46.0",
-    "react": "^19.3.0",
-    "react-dom": "^19.3.0"
+    "lucide-react": "^0.475.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^3.0.1"
   }
 }
