@@ -1,7 +1,13 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 import { nanoid } from 'nanoid';
 import { db } from './db.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -9,7 +15,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json({ limit: '20mb' }));
 
-// Health Check
+// Health Check API
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', service: 'Vice City Backend API', time: new Date().toISOString() });
 });
@@ -175,6 +181,18 @@ app.get('/api/stats', (_req, res) => {
     res.status(500).json({ error: 'Failed to retrieve stats' });
   }
 });
+
+// Serve Frontend Static Files in Production (Unified 1-Deployment Option)
+const distPath = path.join(__dirname, '../../dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.get('*', (req, res) => {
+    if (!req.path.startsWith('/api')) {
+      res.sendFile(path.join(distPath, 'index.html'));
+    }
+  });
+  console.log('📦 Serving production frontend build from:', distPath);
+}
 
 app.listen(PORT, () => {
   console.log(`🚀 Vice City Backend Server listening on http://localhost:${PORT}`);
