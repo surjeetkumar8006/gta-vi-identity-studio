@@ -1,6 +1,8 @@
 import { CharacterProfile } from '../types/empire';
 
-const API_BASE = 'http://localhost:5000/api';
+// Auto-detect production Render API backend or local fallback
+const API_BASE = import.meta.env.VITE_API_URL || 
+  (window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://gta-vi-identity-studio.onrender.com/api');
 
 export interface LeaderboardEntry {
   id: string;
