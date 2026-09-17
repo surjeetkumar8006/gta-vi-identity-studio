@@ -4,7 +4,11 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 import { nanoid } from 'nanoid';
-import { db } from './db.js';
+import dotenv from 'dotenv';
+import { connectDB } from './db.js';
+import { Profile } from './models/Profile.js';
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -12,16 +16,19 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Connect Database
+connectDB();
+
 app.use(cors());
 app.use(express.json({ limit: '20mb' }));
 
 // Health Check API
 app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', service: 'Vice City Backend API', time: new Date().toISOString() });
+  res.json({ status: 'ok', service: 'Vice City Backend API (MongoDB Atlas)', time: new Date().toISOString() });
 });
 
 // 1. Save / Publish Character Empire Profile
-app.post('/api/profiles', (req, res) => {
+app.post('/api/profiles', async (req, res) => {
   try {
     const p = req.body;
     if (!p.name || !p.alias) {
@@ -30,154 +37,170 @@ app.post('/api/profiles', (req, res) => {
 
     const shareId = nanoid(10);
 
-    const stmt = db.prepare(`
-      INSERT INTO profiles (
-        id, name, alias, role, crew, custom_crew_name, motto,
-        photo_url, edited_photo_url, wanted_edited_photo_url, active_style_preset,
-        street_rep, money, influence, risk,
-        territory, property, vehicle, bounty_amount, wanted_stars
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-
-    stmt.run(
+    const newProfile = new Profile({
       shareId,
-      p.name,
-      p.alias,
-      p.role || 'hustler',
-      p.crew || 'solo',
-      p.customCrewName || '',
-      p.motto || '',
-      p.photoUrl,
-      p.editedPhotoUrl || null,
-      p.wantedEditedPhotoUrl || null,
-      p.activeStylePreset || 'vice_sunset',
-      p.stats?.streetRep || 80,
-      p.stats?.money || 70,
-      p.stats?.influence || 85,
-      p.stats?.risk || 75,
-      p.territory || 'downtown',
-      p.property || 'nightclub',
-      p.vehicle || 'sports_car',
-      p.bountyAmount || 500000,
-      p.wantedStars || 5
-    );
+      name: p.name,
+      alias: p.alias,
+      role: p.role || 'hustler',
+      crew: p.crew || 'solo',
+      customCrewName: p.customCrewName || '',
+      motto: p.motto || '',
+      photoUrl: p.photoUrl,
+      editedPhotoUrl: p.editedPhotoUrl || null,
+      wantedEditedPhotoUrl: p.wantedEditedPhotoUrl || null,
+      activeStylePreset: p.activeStylePreset || 'vice_sunset',
+      stats: {
+        streetRep: p.stats?.streetRep || 80,
+        money: p.stats?.money || 70,
+        influence: p.stats?.influence || 85,
+        risk: p.stats?.risk || 75,
+      },
+      territory: p.territory || 'downtown',
+      property: p.property || 'nightclub',
+      vehicle: p.vehicle || 'sports_car',
+      bountyAmount: p.bountyAmount || 500000,
+      wantedStars: p.wantedStars || 5,
+    });
+
+    await newProfile.save();
 
     res.json({
       success: true,
       shareId,
-      message: 'Empire Profile published successfully to Vice City Network!',
+      message: 'Empire Profile published successfully to Vice City MongoDB Network!',
     });
   } catch (err: unknown) {
-    console.error('Error saving profile:', err);
+    console.error('Error saving profile to MongoDB:', err);
     res.status(500).json({ error: 'Failed to publish empire profile' });
   }
 });
 
 // 2. Get Profile by Share ID
-app.get('/api/profiles/:id', (req, res) => {
+app.get('/api/profiles/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    
-    // Increment view count
-    db.prepare(`UPDATE profiles SET views_count = views_count + 1 WHERE id = ?`).run(id);
 
-    const row = db.prepare(`SELECT * FROM profiles WHERE id = ?`).get(id) as Record<string, unknown> | undefined;
+    const profile = await Profile.findOneAndUpdate(
+      { shareId: id },
+      { $inc: { viewsCount: 1 } },
+      { new: true }
+    );
 
-    if (!row) {
+    if (!profile) {
       return res.status(404).json({ error: 'Profile not found' });
     }
 
     res.json({
       success: true,
       profile: {
-        id: row.id,
-        name: row.name,
-        alias: row.alias,
-        role: row.role,
-        crew: row.crew,
-        customCrewName: row.custom_crew_name,
-        motto: row.motto,
-        photoUrl: row.photo_url,
-        editedPhotoUrl: row.edited_photo_url,
-        wantedEditedPhotoUrl: row.wanted_edited_photo_url,
-        activeStylePreset: row.active_style_preset,
-        stats: {
-          streetRep: row.street_rep,
-          money: row.money,
-          influence: row.influence,
-          risk: row.risk,
-        },
-        territory: row.territory,
-        property: row.property,
-        vehicle: row.vehicle,
-        bountyAmount: row.bounty_amount,
-        wantedStars: row.wanted_stars,
-        respectVotes: row.respect_votes,
-        viewsCount: row.views_count,
-        createdAt: row.created_at,
+        id: profile.shareId,
+        name: profile.name,
+        alias: profile.alias,
+        role: profile.role,
+        crew: profile.crew,
+        customCrewName: profile.customCrewName,
+        motto: profile.motto,
+        photoUrl: profile.photoUrl,
+        editedPhotoUrl: profile.editedPhotoUrl,
+        wantedEditedPhotoUrl: profile.wantedEditedPhotoUrl,
+        activeStylePreset: profile.activeStylePreset,
+        stats: profile.stats,
+        territory: profile.territory,
+        property: profile.property,
+        vehicle: profile.vehicle,
+        bountyAmount: profile.bountyAmount,
+        wantedStars: profile.wantedStars,
+        respectVotes: profile.respectVotes,
+        viewsCount: profile.viewsCount,
+        createdAt: profile.createdAt,
       },
     });
   } catch (err: unknown) {
-    console.error('Error fetching profile:', err);
+    console.error('Error fetching profile from MongoDB:', err);
     res.status(500).json({ error: 'Failed to retrieve profile' });
   }
 });
 
 // 3. Get VCPD Top 10 Most Wanted Leaderboard
-app.get('/api/leaderboard', (_req, res) => {
+app.get('/api/leaderboard', async (_req, res) => {
   try {
-    const rows = db.prepare(`
-      SELECT id, name, alias, role, crew, photo_url, edited_photo_url, bounty_amount, wanted_stars, territory, street_rep, respect_votes, views_count, created_at
-      FROM profiles
-      ORDER BY bounty_amount DESC, respect_votes DESC
-      LIMIT 10
-    `).all();
+    const docs = await Profile.find()
+      .sort({ bountyAmount: -1, respectVotes: -1 })
+      .limit(10)
+      .lean();
+
+    const leaderboard = docs.map(doc => ({
+      id: doc.shareId,
+      name: doc.name,
+      alias: doc.alias,
+      role: doc.role,
+      crew: doc.crew,
+      photo_url: doc.photoUrl,
+      edited_photo_url: doc.editedPhotoUrl,
+      bounty_amount: doc.bountyAmount,
+      wanted_stars: doc.wantedStars,
+      territory: doc.territory,
+      street_rep: doc.stats?.streetRep || 80,
+      respect_votes: doc.respectVotes || 0,
+      views_count: doc.viewsCount || 0,
+      created_at: doc.createdAt,
+    }));
 
     res.json({
       success: true,
-      leaderboard: rows,
+      leaderboard,
     });
   } catch (err: unknown) {
-    console.error('Error fetching leaderboard:', err);
+    console.error('Error fetching leaderboard from MongoDB:', err);
     res.status(500).json({ error: 'Failed to retrieve leaderboard' });
   }
 });
 
 // 4. Add Respect / Upvote to Empire
-app.post('/api/profiles/:id/like', (req, res) => {
+app.post('/api/profiles/:id/like', async (req, res) => {
   try {
     const { id } = req.params;
-    const result = db.prepare(`UPDATE profiles SET respect_votes = respect_votes + 1 WHERE id = ?`).run(id);
+    const profile = await Profile.findOneAndUpdate(
+      { shareId: id },
+      { $inc: { respectVotes: 1 } },
+      { new: true }
+    );
 
-    if (result.changes === 0) {
+    if (!profile) {
       return res.status(404).json({ error: 'Profile not found' });
     }
 
-    const updated = db.prepare(`SELECT respect_votes FROM profiles WHERE id = ?`).get(id) as { respect_votes: number };
-    res.json({ success: true, respectVotes: updated.respect_votes });
+    res.json({ success: true, respectVotes: profile.respectVotes });
   } catch (err: unknown) {
-    console.error('Error liking profile:', err);
+    console.error('Error liking profile in MongoDB:', err);
     res.status(500).json({ error: 'Failed to add respect vote' });
   }
 });
 
 // 5. Global Vice City Network Stats
-app.get('/api/stats', (_req, res) => {
+app.get('/api/stats', async (_req, res) => {
   try {
-    const totalCount = (db.prepare(`SELECT COUNT(*) as count FROM profiles`).get() as { count: number }).count;
-    const totalBounty = (db.prepare(`SELECT SUM(bounty_amount) as total FROM profiles`).get() as { total: number }).total || 0;
-    const topTerritoryRow = db.prepare(`
-      SELECT territory, COUNT(*) as count FROM profiles GROUP BY territory ORDER BY count DESC LIMIT 1
-    `).get() as { territory: string } | undefined;
+    const totalCount = await Profile.countDocuments();
+    const bountyResult = await Profile.aggregate([
+      { $group: { _id: null, total: { $sum: '$bountyAmount' } } }
+    ]);
+    const topTerritoryResult = await Profile.aggregate([
+      { $group: { _id: '$territory', count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: 1 }
+    ]);
+
+    const totalBountyPool = bountyResult.length > 0 ? bountyResult[0].total : 0;
+    const topDistrict = topTerritoryResult.length > 0 ? topTerritoryResult[0]._id : 'Downtown Vice';
 
     res.json({
       success: true,
       totalEmpires: totalCount,
-      totalBountyPool: totalBounty,
-      topDistrict: topTerritoryRow ? topTerritoryRow.territory : 'Downtown Vice',
+      totalBountyPool,
+      topDistrict,
     });
   } catch (err: unknown) {
-    console.error('Error fetching stats:', err);
+    console.error('Error fetching stats from MongoDB:', err);
     res.status(500).json({ error: 'Failed to retrieve stats' });
   }
 });
